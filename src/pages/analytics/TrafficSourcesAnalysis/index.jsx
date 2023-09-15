@@ -9,7 +9,6 @@ const TrafficSourcesAnalysis = ({ siteId, apiKey }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-
         // Construct the API URL for Traffic Sources Analysis
         const apiUrl = `https://api.clicky.com/api/stats/4?site_id=${siteId}&sitekey=${apiKey}&type=traffic-sources&output=json`;
 
@@ -25,6 +24,16 @@ const TrafficSourcesAnalysis = ({ siteId, apiKey }) => {
         };
 
         fetchData();
+
+        // Set up a timer to refresh data every 10 seconds
+        const refreshInterval = setInterval(() => {
+            fetchData();
+        }, 10000); // 10 seconds
+
+        // Clean up the interval when the component unmounts
+        return () => {
+            clearInterval(refreshInterval);
+        };
     }, [apiKey, siteId]);
 
     if (loading) {
@@ -38,15 +47,15 @@ const TrafficSourcesAnalysis = ({ siteId, apiKey }) => {
     // Extracting the data items from the response using a for loop
     const trafficItems = [];
 
-if (trafficSourcesData && trafficSourcesData.length > 0) {
-    for (let i = 0; i < trafficSourcesData.length; i++) {
-        const item = trafficSourcesData[i].dates[0].items[0];
+    if (trafficSourcesData && trafficSourcesData.length > 0) {
+        for (let i = 0; i < trafficSourcesData.length; i++) {
+            const item = trafficSourcesData[i].dates[0].items[0];
 
-        if (item && item.value) { // Check if 'item' and 'item.value' exist
-            trafficItems.push(item);
+            if (item && item.value) { // Check if 'item' and 'item.value' exist
+                trafficItems.push(item);
+            }
         }
     }
-}
 
 
     // Get the current date

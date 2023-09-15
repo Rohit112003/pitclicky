@@ -23,7 +23,13 @@ const SearchAnalysis = ({ apiKey, siteId }) => {
             }
         };
 
-        fetchData();
+        const refreshInterval = setInterval(() => {
+            fetchData(); // Fetch data every 50 seconds
+        }, 50000); // 50 seconds
+
+        return () => {
+            clearInterval(refreshInterval); // Clean up the interval when the component unmounts
+        };
     }, [apiKey, siteId]);
 
     if (loading) {

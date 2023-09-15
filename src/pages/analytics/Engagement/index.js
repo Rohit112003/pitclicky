@@ -6,8 +6,8 @@ import Table from 'react-bootstrap/Table'
 const Engagement = ({ siteId, apiKey }) => {
   const [engagementData, setEngagementData] = useState(null);
 
-  // Use a timer to call fetchData every 3 seconds
   useEffect(() => {
+
     const fetchData = async () => {
       const url = `https://api.clicky.com/api/stats/4?site_id=${siteId}&sitekey=${apiKey}&type=time-total-pretty,time-average-pretty,visitors,visitors-unique,visitors-online,visitors-most-active,actions-pageviews,actions,actions-average,bounce-rate&output=json`;
 
@@ -24,7 +24,13 @@ const Engagement = ({ siteId, apiKey }) => {
       }
     };
 
-    fetchData();
+    const interval = setInterval(() => {
+      fetchData(); // Fetch data every 20 seconds
+    }, 20000); // 20 seconds
+
+    return () => {
+      clearInterval(interval); // Clean up the interval when the component unmounts
+    };
   }, [apiKey, siteId]);
 
   return (

@@ -28,7 +28,14 @@ function VisitorsMostActive({ siteId, apiKey }) {
             }
         };
 
-        fetchData();
+
+        const refreshInterval = setInterval(() => {
+            fetchData(); // Fetch data every 10 seconds
+        }, 10000); // 10 seconds
+
+        return () => {
+            clearInterval(refreshInterval); // Clean up the interval when the component unmounts
+        };
     }, [siteId, apiKey]);
 
     if (loading) {
