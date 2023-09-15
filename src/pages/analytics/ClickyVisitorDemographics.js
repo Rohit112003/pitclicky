@@ -8,26 +8,24 @@ const ClickyVisitorDemographics = ({ siteId, apiKey }) => {
     const [visitorData, setVisitorsData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const fetchData = async () => {
-        try {
-            // Fetch Visitors List
-            const visitorsListResponse = await axios.get(
-                `https://api.clicky.com/api/stats/4?site_id=${siteId}&sitekey=${apiKey}&type=visitors-list&visitor-details=ip_address,geolocation,web_browser,operating_system&output=json`
-            );
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch Visitors List
+                const visitorsListResponse = await axios.get(
+                    `https://api.clicky.com/api/stats/4?site_id=${siteId}&sitekey=${apiKey}&type=visitors-list&visitor-details=ip_address,geolocation,web_browser,operating_system&output=json`
+                );
 
-            const visitorsData = visitorsListResponse.data;
-            if (visitorsData && visitorsData.length > 0) {
-                setVisitorsData(visitorsData);
+                const visitorsData = visitorsListResponse.data;
+                if (visitorsData && visitorsData.length > 0) {
+                    setVisitorsData(visitorsData);
+                    setIsLoading(false);
+                }
+            } catch (error) {
+                console.error('Error fetching Clicky data:', error);
                 setIsLoading(false);
             }
-        } catch (error) {
-            console.error('Error fetching Clicky data:', error);
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData(); // Initial data fetch
+        };
 
         const interval = setInterval(() => {
             fetchData(); // Fetch data every 30 seconds
